@@ -1,84 +1,63 @@
-# HR Analytics Project – Analysis Report
 
-## Executive Summary
+# Why Are We Losing Good People? An HR Attrition Analysis
 
-This project analyzes an employee attrition dataset using PostgreSQL to uncover meaningful workforce insights through SQL. The analysis covers employee demographics, compensation, performance, satisfaction, overtime, promotions, experience, and attrition. By applying SQL concepts ranging from basic aggregation to advanced window functions and Common Table Expressions (CTEs), the project transforms raw HR data into actionable business intelligence that can support organizational decision-making.
+Every year, companies watch talented employees walk out the door — and often don't fully understand why until exit interviews are already over. This project started with a simple question: **can the data tell us who's at risk of leaving before they actually do?**
 
-## Key Findings
+Using IBM's HR Analytics dataset (1,470 employees, 35 attributes), I worked through this problem the way a BI analyst would on the job — starting in SQL to interrogate the data, then building a Power BI dashboard to turn the findings into something a decision-maker could actually act on.
 
-### 1. Employee Distribution
+## The Business Problem
 
-The dataset was analyzed to understand the distribution of employees across departments, job roles, education fields, marital status, and business travel categories. This provides HR with an overview of the organization's workforce composition and helps identify departments with larger staffing requirements.
+Employee attrition isn't just an HR metric — it's a cost center. Replacing an employee typically costs 50–200% of their annual salary once you factor in recruiting, onboarding, and lost productivity. With attrition sitting at **16.1%** in this dataset, that's a meaningful chunk of the workforce walking out the door every year.
 
-### 2. Attrition Analysis
+The goal of this project wasn't to just report *how many* people left — it was to answer three questions leadership actually cares about:
 
-Employee attrition was examined across multiple dimensions, including departments, overtime, education fields, age groups, and job roles. The analysis revealed that attrition is not evenly distributed across the organization, indicating that certain employee groups face higher turnover risks than others.
+1. **Where** is attrition concentrated? (which departments, roles, teams)
+2. **Why** are people leaving — is it pay, overtime, satisfaction, stalled careers?
+3. **Who** on the current team is at risk *right now*, so HR can intervene before it's too late?
 
-### 3. Impact of Overtime
+## What I Found
 
-One of the strongest findings from the analysis is the relationship between overtime and employee attrition. Employees working overtime experienced an attrition rate of approximately **30%**, while employees not working overtime showed an attrition rate of approximately **10%**. This suggests that employees who regularly work overtime are significantly more likely to leave the organization, highlighting workload management as a key retention concern.
+A few things stood out once I got past the surface-level numbers:
 
-### 4. Salary Analysis
+- **Overtime is the single strongest driver of attrition.** Employees working overtime leave at nearly **3x the rate** of those who don't (30.5% vs 10.4%). This isn't subtle — it's the loudest signal in the whole dataset.
+- **Sales Representatives have the highest attrition of any role**, at almost **40%** — compared to under 5% for Managers and Research Directors. Seniority and stability seem to matter more than department alone.
+- Attrition is highest in **Sales (20.6%)** and **HR (19%)**, and lowest in **R&D (13.8%)** — worth digging into whether this is about role pressure, career pathing, or something else entirely.
+- Lower job satisfaction, lower work-life balance scores, and shorter tenure all correlate with higher attrition — but overtime and role still explain more of the variance than satisfaction scores alone.
 
-Salary trends were explored using averages, rankings, quartiles, and departmental comparisons. Departments and job roles with the highest average salaries were identified, while employees were grouped into salary quartiles to understand income distribution. Departmental average salaries were also compared with the overall company average to identify compensation differences across departments.
+## Recommendations
 
-### 5. Department-Level Performance
+Based on the analysis, here's what I'd actually bring to a stakeholder meeting:
 
-Each department was evaluated based on workforce size, average salary, average age, job satisfaction, work-life balance, performance rating, and average tenure. These summaries provide HR managers with a comprehensive overview of departmental performance and employee well-being.
+1. **Audit overtime policy in Sales and HR first.** The overtime-attrition link is too strong to ignore, and it's also the most directly fixable lever — unlike compensation or career structure, this is an operational decision that could be changed within a quarter.
+2. **Build a retention plan specifically for Sales Representatives.** With attrition near 40%, this role needs its own intervention — better onboarding, clearer commission/growth structure, or manager support — rather than a company-wide policy.
+3. **Use tenure as an early-warning signal.** Attrition risk isn't flat across a career — flagging employees in their first 1–2 years for extra check-ins could catch people before they disengage.
+4. **Don't treat satisfaction scores in isolation.** They matter, but overtime and role turned out to be stronger predictors — a good reminder that HR surveys alone won't catch everything.
 
-### 6. Employee Rankings
+## What's in This Repo
 
-Window functions such as `ROW_NUMBER()`, `RANK()`, and `DENSE_RANK()` were used to rank employees by salary within departments and across the organization. This analysis identified the highest-paid employees and supported comparisons among departments and job roles.
+- **`/sql`** — Queries used to explore the dataset: attrition rates by department/role, overtime cross-tabs, income and tenure breakdowns, and the groundwork for the dashboard's DAX measures.
+- **`/dashboard`** — Power BI file (`.pbix`) with the full interactive dashboard: KPI overview, department/role breakdown, overtime and satisfaction drivers, and filterable slicers.
+- **`/screenshots`** — Static images of the dashboard for anyone browsing without Power BI installed.
+- **`HR_dataset.csv`** — The raw dataset (IBM HR Analytics Employee Attrition & Performance, publicly available on Kaggle).
 
-### 7. Salary Distribution
+## The Dashboard
 
-Using the `NTILE()` function, employees were divided into salary quartiles. This helped identify the highest-paid and lowest-paid segments of the workforce, supporting compensation benchmarking and salary structure analysis.
+The dashboard is built around one page, on purpose — the goal was to make the story readable in under a minute:
 
-### 8. Salary Progression
+- **Top row:** headline KPIs (total employees, attrition rate, avg income, avg tenure)
+- **Middle:** where attrition is concentrated (department/role) and its single biggest driver (overtime)
+- **Bottom:** deeper drivers — income bands, satisfaction comparisons between leavers and stayers — plus slicers so you can filter by department, gender, or overtime status and watch the story shift.
 
-Window functions including `LAG()` and `LEAD()` were applied to compare employee salaries with previous and next salary values. These comparisons provide insight into salary progression and differences between consecutive employees.
+## Tools Used
 
-### 9. Experience and Promotion Analysis
+- **SQL** — data exploration, aggregation, and validation before visualization
+- **Power BI** — DAX measures, interactive dashboard, drill-down filtering
+- **Dataset:** IBM HR Analytics Employee Attrition & Performance (Kaggle)
 
-The project identified departments with the highest average employee experience and highlighted employees who had not received promotions for extended periods. These findings can help HR identify potential promotion candidates and evaluate career progression policies.
+## A Note on the Data
 
-### 10. Job Satisfaction and Work-Life Balance
+This is a well-known, somewhat idealized dataset — real HR data is messier and attrition drivers vary a lot by industry and geography. I've treated the findings here as illustrative of the *analysis process*, not as universal truths about why people quit jobs. The methodology — going from a business question, to SQL exploration, to a dashboard that supports a decision — is the actual point of this project.
 
-Average job satisfaction and work-life balance scores were analyzed across departments. These metrics help assess employee engagement and identify departments where workplace improvements may be needed.
+## Let's Connect
 
-### 11. High-Risk Employee Identification
-
-Employees meeting multiple risk factors—including overtime, low job satisfaction, poor work-life balance, and long periods without promotion—were identified as potential attrition risks. This enables HR teams to take proactive retention measures before valuable employees leave the organization.
-
-### 12. Top Talent Identification
-
-The project identified the top 10% highest-paid employees using window functions. Such analyses can support succession planning, leadership development, and retention strategies for high-value employees.
-
-## SQL Skills Demonstrated
-
-This project demonstrates proficiency in:
-
-* Data filtering and sorting
-* Aggregate functions (`COUNT`, `SUM`, `AVG`, `MIN`, `MAX`)
-* `GROUP BY` and `HAVING`
-* Conditional logic using `CASE`
-* Joins and subqueries
-* Common Table Expressions (CTEs)
-* Window functions (`ROW_NUMBER`, `RANK`, `DENSE_RANK`, `LAG`, `LEAD`, `FIRST_VALUE`, `LAST_VALUE`, `NTILE`)
-* Ranking and analytical reporting
-* Business-oriented SQL problem solving
-
-## Business Recommendations
-
-Based on the analysis, the following recommendations are proposed:
-
-* Monitor employees who frequently work overtime, as they exhibit substantially higher attrition rates.
-* Review compensation structures for departments whose average salaries fall below the company average.
-* Regularly evaluate employees with long periods since their last promotion to improve career development opportunities.
-* Focus retention initiatives on departments and employee groups with higher attrition rates.
-* Improve work-life balance and employee satisfaction through targeted HR policies and wellness initiatives.
-* Use salary quartiles and ranking analyses to ensure fair compensation and identify high-performing employees for rewards and recognition.
-
-## Conclusion
-
-This project demonstrates how SQL can be used not only to retrieve data but also to generate meaningful business insights. Through exploratory analysis, aggregation, window functions, and advanced SQL techniques, the project provides actionable recommendations for workforce planning, employee retention, compensation analysis, and organizational performance. It highlights the practical application of SQL in solving real-world HR analytics problems and reflects the analytical skills expected of a Data Analyst.
+If you have feedback on the analysis, the dashboard design, or just want to talk data — feel free to open an issue or reach out. Always happy to hear how others would've approached this differently.
