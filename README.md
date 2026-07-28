@@ -1,4 +1,4 @@
-# HR Analytics SQL Project – Analysis Report
+# HR Analytics Project – Analysis Report
 
 ## Executive Summary
 
